@@ -1,0 +1,40 @@
+{
+    "name": "Espresso Martini",
+    "ingredients": [
+        {
+            "name": "Vodka",
+            "quantity": {
+                "value": 30,
+                "unit": "ml"
+            }
+        },
+        {
+            "name": "Espresso",
+            "quantity": {
+                "value": 30,
+                "unit": "ml"
+            }
+        },
+        {
+            "name": "Kahlúa",
+            "quantity": {
+                "value": 20,
+                "unit": "ml"
+            }
+        },
+        {
+            "name": "Salt",
+            "quantity": {
+                "value": 1,
+                "unit": "pinch"
+            }
+        }
+    ],
+    "garnish": "3 coffee beans",
+    "instructions": [
+        "Shake ingredients with ice.",
+        "Strain into a coupe or martini glass.",
+        "Express 1 lemon twist and discard.",
+        "Float 3 coffee beans in the centre."
+    ]
+}

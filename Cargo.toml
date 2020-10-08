@@ -1,0 +1,14 @@
+[package]
+name = "rust_and_mongodb"
+version = "0.1.0"
+authors = ["Mark Smith <judy@judy.co.uk>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+mongodb = "1.1.1"
+tokio = "0.2.22"
+futures = "0.3"
+serde = "1.0.116"
+chrono = "0.4.19"

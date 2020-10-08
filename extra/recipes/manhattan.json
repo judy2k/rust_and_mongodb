@@ -1,0 +1,25 @@
+{
+    "name": "Manhattan",
+    "ingredients": [
+        {
+            "name": "Bourbon Whiskey",
+            "quantity": {
+                "value": 60,
+                "unit": "ml"
+            }
+        },
+        {
+            "name": "Sweet Vermouth",
+            "quantity": {
+                "value": 30,
+                "unit": "ml"
+            }
+        }
+    ],
+    "garnish": "Maraschino Cherry",
+    "instructions": [
+        "Combine ingredients and stir with ice.",
+        "Strain into a coupe or martini glass.",
+        "Garnish with a maraschino cherry."
+    ]
+}

@@ -1,0 +1,38 @@
+{
+    "name": "Rye Whisky Old Fashioned",
+    "ingredients": [
+        {
+            "name": "Rye Whiskey",
+            "quantity": {
+                "value": 60,
+                "unit": "ml"
+            }
+        },
+        {
+            "name": "Simple Syrup",
+            "quantity": {
+                "value": 1,
+                "unit": "barspoon"
+            }
+        },
+        {
+            "name": "Angostura Bitters",
+            "quantity": {
+                "value": 2,
+                "unit": "dash"
+            }
+        },
+        {
+            "name": "Orange Bitters",
+            "quantity": {
+                "value": 1,
+                "unit": "dash"
+            }
+        }
+    ],
+    "garnish": "Lemon Twist",
+    "instructions": [
+        "Combine ingredients and stir with ice.",
+        "Garnish with lemon twist."
+    ]
+}

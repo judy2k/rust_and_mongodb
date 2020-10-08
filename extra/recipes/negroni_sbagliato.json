@@ -1,0 +1,33 @@
+{
+    "name": "Negroni Sbagliato",
+    "ingredients": [
+        {
+            "name": "Campari",
+            "quantity": {
+                "value": 30,
+                "unit": "ml"
+            }
+        },
+        {
+            "name": "Sweet Vermouth",
+            "quantity": {
+                "value": 30,
+                "unit": "ml"
+            }
+        },
+        {
+            "name": "Prosecco",
+            "quantity": {
+                "value": 30,
+                "unit": "ml"
+            }
+        }
+    ],
+    "garnish": "Orange Twist",
+    "instructions": [
+        "Stir Campari & vermouth with ice",
+        "Pour into a champagne flute",
+        "Add wine & gently combine",
+        "Serve with orange twist"
+    ]
+}
