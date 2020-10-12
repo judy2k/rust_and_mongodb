@@ -16,14 +16,14 @@ impl Display for Recipe {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         write!(
             f,
-            "Recipe: {}, Rating: {} ({})",
+            "Recipe: {}, Rating: {}",
             self.name,
             self.rating,
-            self.reviews
-                .iter()
-                .map(|i| i.rating.to_string())
-                .collect::<Vec<String>>()
-                .join(", "),
+            // self.reviews
+            //     .iter()
+            //     .map(|i| i.rating.to_string())
+            //     .collect::<Vec<String>>()
+            //     .join(", "),
         )
     }
 }
