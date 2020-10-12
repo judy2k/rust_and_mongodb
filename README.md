@@ -7,8 +7,8 @@ Most of the code you'll be interested in is in [main.rs](./src/main.rs).
 
 If you want to run the code, set an environment variable `MDB_URL` to point to your MongoDB cluster, and then execute `cargo run`.
 
-* [extra](./extras) contains some small Python scripts for generating the sample database.
-* [extra/recipes](./extra/recipes) contains a small handful of my favourite cocktail recipes.
+* [extra](./extra) contains some small Python scripts for generating the sample database.
+* [extra/recipes](./extra/recipes) contains a small handful of my favourite cocktail recipes to demonstrate the database schema. They can be uploaded with [mongoimport](https://docs.mongodb.com/manual/reference/program/mongoimport/)
 
 ## More Information
 
