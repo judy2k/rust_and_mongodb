@@ -17,28 +17,21 @@ import requests # fades
 import pymongo  # fades pymongo[srv]
 
 
-def gen_ratings():
-    rating_count = randint(0, 20)
-    mean = randint(1, 5)
-    std_dev = uniform(0, 2)
-    return [
-        {
-        'when': datetime.now() - timedelta(days=uniform(0, 365)),
-        'rating': max(min(round(normalvariate(mean, std_dev)), 5), 0),
-        } for _ in range(rating_count)
-    ]
-
-
 def main():
     client = pymongo.MongoClient(os.environ['MDB_URL'])
     recipes = client.cocktails.recipes
     reviews = client.cocktails.reviews
+    recipes_with_reviews = client.cocktails.recipes_with_reviews
 
-    for recipe in recipes.find():
-        if ratings := gen_ratings():
-            for rating in ratings:
-                rating['recipe_id'] = recipe['_id']
-            reviews.insert_many(ratings)
+    recipe = recipes.find_one({"name": "Negroni Sbagliato"})
+    review = reviews.find_one({ "recipe_id": recipe['_id'] })
+
+    with_reviews = recipes_with_reviews.find_one({"name": "Negroni Sbagliato"})
+
+    pprint(recipe)
+    pprint(review)
+
+    pprint(with_reviews)
 
 
 if __name__ == '__main__':
