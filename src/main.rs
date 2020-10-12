@@ -2,9 +2,8 @@ mod data;
 
 use crate::data::Recipe;
 
-use chrono::Utc;
 use futures::stream::StreamExt;
-use mongodb::bson::{doc, from_document, Bson};
+use mongodb::bson::{doc, from_document};
 use mongodb::{options::ClientOptions, options::FindOptions, options::ResolverConfig, Client};
 
 fn heading(s: &str) {
@@ -16,13 +15,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mdb_uri = std::env::var("MDB_URL").or(Err("MDB_URL environment variable missing"))?;
 
     // Parse a connection string into an options struct.
+    // This ClientOptions is configured to use the cloudflare resolver to
+    // avoid a bug in the default Windows resolver.
     let client_options =
         ClientOptions::parse_with_resolver_config(&mdb_uri, ResolverConfig::cloudflare()).await?;
 
-    // Get a handle to the deployment.
+    // Get a handle to the cluster:
     let client = Client::with_options(client_options)?;
-    let database = client.database("cocktails");
 
+    let database = client.database("cocktails");
     let recipes = database.collection("recipes");
 
     let options = FindOptions::builder().sort(doc! { "name": 1 }).build();
@@ -34,6 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     /*
+    // This was just sample code:
     recipes.insert_one(doc! {
         "name": "Dodgy Cocktail",
         "ingredients": [{
@@ -46,24 +48,30 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }, None).await?;
     */
 
-    // Search by name:
+    // Search by name: -------------------------------------------------------
     heading("Negroni Sbagliato");
     let query = doc! { "name": "Negroni Sbagliato" };
     let mut cursor = recipes.find(query, options.clone()).await?;
+
+    // Execute the query and loop through the results:
     while let Some(result) = cursor.next().await {
         let recipe = result?;
         println!("Cocktail: {}", recipe.get_str("name")?);
     }
 
-    // Vodka Cocktails:
+    // Vodka Cocktails: ------------------------------------------------------
     heading("Vodka Cocktails");
+    // Search for all recipes containing an ingredient with the name "Vodka":
     let query = doc! { "ingredients": { "$elemMatch": {"name": "Vodka"} } };
+
+    // Execute the query and loop through the results:
     let mut cursor = recipes.find(query, options.clone()).await?;
     while let Some(result) = cursor.next().await {
         let recipe = result?;
         println!("Cocktail: {}", recipe.get_str("name")?);
     }
 
+    // Empty Aggregation Pipeline: -------------------------------------------
     let mut cursor = recipes.aggregate(vec![], None).await?;
     heading("Empty Aggregation Pipeline");
     while let Some(result) = cursor.next().await {
@@ -71,40 +79,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("Cocktail: {}", recipe.get_str("name")?);
     }
 
-    /*
-            [
-        {
-            "$lookup": {
-                "from": "reviews",
-                "localField": "_id",
-                "foreignField": "recipe_id",
-                "as": "reviews"
-            }
-        }, {
-            "$addFields": {
-                "review_avg": {
-                    "$divide": [
-                        {
-                            "$round": {
-                                "$multiply": [
-                                    2, {
-                                        "$avg": "$reviews.rating"
-                                    }
-                                ]
-                            }
-                        }, 2
-                    ]
-                }
-            }
-        }, {
-            "$sort": {
-                "review_avg": -1
-            }
-        }
-    ]
-            */
-
-    // Sorting:
+    // Sorting in an Aggregation Pipeline: -----------------------------------
     let mut cursor = recipes
         .aggregate(
             vec![doc! {
@@ -121,7 +96,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("Cocktail: {}", recipe.get_str("name")?);
     }
 
-    // Filtering:
+    // Filtering: ------------------------------------------------------------
     let query = vec![
         doc! {
             "$match": {
@@ -142,7 +117,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("Cocktail: {}", recipe.get_str("name")?);
     }
 
-    // Deserialization:
+    // Deserialization with Serde: -------------------------------------------
     let mut cursor = recipes.aggregate(query.clone(), None).await?;
     heading("Deserialization");
     while let Some(result) = cursor.next().await {
@@ -150,7 +125,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("{}", recipe);
     }
 
-    // Join:
+    // Join with reviews: ----------------------------------------------------
     let query = vec![
         doc! {
             "$match": {
@@ -183,27 +158,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
+    // Find the top 10 rated cocktails: --------------------------------------
     let query = vec![
-        doc! {
-        "$match": {
-            "ingredients": {
-                "$elemMatch": {
-                    "name": "Vodka"}}}},
-        doc! {
-        "$lookup": {
-            "from": "reviews",
-            "localField": "_id",
-            "foreignField": "recipe_id",
-            "as": "reviews"}},
-    ];
-
-    // Aggregate:
-    let query = vec![
-        doc! {
-            "$sort": {
-                "name": 1
-            }
-        },
         doc! {
             "$lookup": {
                 "from": "reviews",
@@ -240,19 +196,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    recipes.update_one(
-        doc! {"name": "Negroni Sbagliato"},
-        doc! {
-            "$push": {
-                "reviews": {
-                    "rating": 4,
-                    "when": Utc::now(),
-                }
+    /*
+    // Sample code to add a review to a recipe document:
+    recipes
+        .update_one(
+            doc! {"name": "Negroni Sbagliato"},
+            doc! {
+                "$push": {
+                    "reviews": {
+                        "rating": 4,
+                        "when": Utc::now(),
+                    }
+                },
             },
-        },
-        None,
-    )
-    .await?;
+            None,
+        )
+        .await?;
+    */
 
     Ok(())
 }
