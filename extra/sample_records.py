@@ -1,7 +1,12 @@
 #!/usr/bin/env fades
 
 """
-review.py - A script to add random reviews to cocktail recipes.
+sample_records.py - Print out the structure of some sample records from the cocktails database.
+
+The MongoDB database is configured with the MDB_URL env var.
+
+This script is designed to be run with `fades <https://github.com/PyAr/fades>`_,
+which will handle installing the required dependencies into a Python virtualenv for you.
 """
 
 from datetime import datetime, timedelta

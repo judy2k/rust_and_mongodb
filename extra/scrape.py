@@ -1,7 +1,7 @@
 #!/usr/bin/env fades
 
 """
-scrape.py - A script to upload random cocktails.
+scrape.py - A script to upload random cocktails to a MongoDB database.
 
 Requests 100 random cocktails from
 https://www.thecocktaildb.com/api/json/v1/1/random.php
@@ -47,6 +47,11 @@ def convert_json(raw):
 
 
 def parse_measure(measure_str):
+    """
+    Attempt to convert the measurement strings used by CocktailDB to the
+    structure used by my database.
+    """
+
     if measure_str is None:
         return None
     measure_str = measure_str.strip()
@@ -76,79 +81,6 @@ def main():
             print(e, file=sys.stderr)
         time.sleep(1)
 
-
-def test_ingredients():
-    raw = requests.get('https://www.thecocktaildb.com/api/json/v1/1/random.php').json()['drinks'][0]
-    print('Cocktail:', raw['idDrink'])
-    for i in count(1):
-        if raw.get(f'strMeasure{i}') is not None:
-            parse_measure(raw.get(f'strMeasure{i}'))
-        else:
-            break
-
-
-def test():
-    #raw = requests.get('https://www.thecocktaildb.com/api/json/v1/1/random.php').json()
-    pprint(convert_json({'drinks': [{'dateModified': '2017-04-24 22:18:22',
-             'idDrink': '15182',
-             'strAlcoholic': 'Alcoholic',
-             'strCategory': 'Ordinary Drink',
-             'strCreativeCommonsConfirmed': 'No',
-             'strDrink': 'After sex',
-             'strDrinkAlternate': None,
-             'strDrinkDE': None,
-             'strDrinkES': None,
-             'strDrinkFR': None,
-             'strDrinkThumb': 'https://www.thecocktaildb.com/images/media/drink/xrl66i1493068702.jpg',
-             'strDrinkZH-HANS': None,
-             'strDrinkZH-HANT': None,
-             'strGlass': 'Highball glass',
-             'strIBA': None,
-             'strIngredient1': 'Vodka',
-             'strIngredient10': None,
-             'strIngredient11': None,
-             'strIngredient12': None,
-             'strIngredient13': None,
-             'strIngredient14': None,
-             'strIngredient15': None,
-             'strIngredient2': 'Creme de Banane',
-             'strIngredient3': 'Orange juice',
-             'strIngredient4': None,
-             'strIngredient5': None,
-             'strIngredient6': None,
-             'strIngredient7': None,
-             'strIngredient8': None,
-             'strIngredient9': None,
-             'strInstructions': 'Pour the vodka and creme over some ice cubes '
-                                'in a tall glass and fill up with juice. to '
-                                'make it beuty full make the top of the glass '
-                                'with a grenadine and sugar',
-             'strInstructionsDE': 'Gießen Sie den Wodka und die Sahne über '
-                                  'einige Eiswürfel in ein hohes Glas und '
-                                  'füllen Sie ihn mit Saft. Damit es voll ist, '
-                                  'verzieren Sie die Oberseite des Glases mit '
-                                  'einer Grenadine und Zucker.',
-             'strInstructionsES': None,
-             'strInstructionsFR': None,
-             'strInstructionsZH-HANS': None,
-             'strInstructionsZH-HANT': None,
-             'strMeasure1': '2 cl ',
-             'strMeasure10': None,
-             'strMeasure11': None,
-             'strMeasure12': None,
-             'strMeasure13': None,
-             'strMeasure14': None,
-             'strMeasure15': None,
-             'strMeasure2': '1 cl ',
-             'strMeasure3': None,
-             'strMeasure4': None,
-             'strMeasure5': None,
-             'strMeasure6': None,
-             'strMeasure7': None,
-             'strMeasure8': None,
-             'strMeasure9': None,
-             'strTags': None,
-             'strVideo': None}]}))
 
 if __name__ == '__main__':
     main()
